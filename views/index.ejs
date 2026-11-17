@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+    <header class="hero">
+      <div class="logo">🔍</div>
+      <div>
+        <h1>Search <span>Visualizer</span></h1>
+        <p>Watch how searching algorithms find a key, one step at a time.</p>
+      </div>
+    </header>
+
+    <form class="form" action="/visualize" method="POST" id="searchForm">
+      <section class="panel inputs">
+        <div class="field grow">
+          <label for="arrayInput">Array <small>(comma or space separated, max 30)</small></label>
+          <div class="row">
+            <input id="arrayInput" name="array" type="text" placeholder="e.g. 12, 5, 33, 8, 21, 47, 3" value="<%= form.array %>" required />
+            <button type="button" id="randomBtn" class="btn ghost" title="Generate random array">🎲 Random</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="keyInput">Key to find</label>
+          <input id="keyInput" name="key" type="number" step="any" placeholder="e.g. 21" value="<%= form.key %>" required />
+        </div>
+      </section>
+
+      <section class="panel">
+        <span class="section-label">Choose algorithm</span>
+        <div class="algo-grid">
+          <% Object.entries(algorithms).forEach(([id, a]) => { %>
+            <label class="algo-card">
+              <input type="radio" name="algorithm" value="<%= id %>" <%= form.algorithm === id ? 'checked' : '' %> />
+              <% if (a.requiresSorted) { %><span class="tag-sorted">needs sorted</span><% } %>
+              <h3><%= a.name %></h3>
+              <p><%= a.desc %></p>
+            </label>
+          <% }) %>
+        </div>
+      </section>
+
+      <div class="start-row">
+        <button type="submit" class="btn primary big">▶ Start Visualization</button>
+        <% if (error) { %><div class="error"><%= error %></div><% } %>
+      </div>
+    </form>
+
+<%- include('partials/footer') %>
+  <script src="/js/home.js"></script>
+</body>
+</html>

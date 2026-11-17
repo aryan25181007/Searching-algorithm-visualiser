@@ -1,0 +1,84 @@
+<%- include('partials/header') %>
+
+    <section class="panel stage" id="stage">
+      <div class="stage-top">
+        <div>
+          <h2><%= algo.name %></h2>
+          <p class="muted"><%= algo.desc %></p>
+          <p class="inputs-line">
+            Searching for <b class="key"><%= key %></b> in
+            <code>[<%= original.join(', ') %>]</code>
+          </p>
+        </div>
+        <div class="badges">
+          <span class="badge">Best <%= algo.best %></span>
+          <span class="badge">Avg <%= algo.avg %></span>
+          <span class="badge">Worst <%= algo.worst %></span>
+        </div>
+      </div>
+
+      <% if (result.sortedNow) { %>
+        <div class="note">ℹ️ <%= algo.name %> needs a sorted array, so your array was sorted first.</div>
+      <% } %>
+
+      <div class="legend">
+        <span><i class="dot d-default"></i>Unvisited</span>
+        <span><i class="dot d-range"></i>Search range</span>
+        <span><i class="dot d-current"></i>Comparing</span>
+        <span><i class="dot d-visited"></i>Checked / discarded</span>
+        <span><i class="dot d-found"></i>Found</span>
+      </div>
+
+      <div class="viz-wrap">
+        <div id="viz" class="viz"></div>
+      </div>
+
+      <div id="message" class="message">Press play to begin.</div>
+
+      <div class="controls">
+        <button id="resetBtn" class="icon-btn" title="Restart">⏮</button>
+        <button id="prevBtn" class="icon-btn" title="Previous step">◀</button>
+        <button id="playBtn" class="icon-btn play" title="Play / Pause">⏸</button>
+        <button id="nextBtn" class="icon-btn" title="Next step">▶</button>
+        <div class="speed">
+          <span>🐢</span>
+          <input id="speed" type="range" min="1" max="10" value="5" />
+          <span>🐇</span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>Step</span><b id="sStep">0 / <%= result.steps.length %></b></div>
+        <div class="stat"><span>Comparisons</span><b id="sCmp">0</b></div>
+        <div class="stat"><span>Status</span><b id="sStatus">Ready</b></div>
+      </div>
+
+      <div class="progress"><div id="bar"></div></div>
+
+      <details class="log-wrap" open>
+        <summary>Step log</summary>
+        <ol id="log" class="log"></ol>
+      </details>
+
+      <div class="actions">
+        <a class="btn ghost" href="/?array=<%= encodeURIComponent(form.array) %>&key=<%= encodeURIComponent(form.key) %>&algorithm=<%= form.algorithm %>">← Change input</a>
+        <% Object.entries({ linear: 'Linear', binary: 'Binary' }).forEach(([id, label]) => { if (id !== form.algorithm) { %>
+          <form action="/visualize" method="POST" class="inline">
+            <input type="hidden" name="array" value="<%= form.array %>" />
+            <input type="hidden" name="key" value="<%= form.key %>" />
+            <input type="hidden" name="algorithm" value="<%= id %>" />
+            <button class="btn ghost small" type="submit">Try <%= label %></button>
+          </form>
+        <% } }) %>
+      </div>
+    </section>
+
+<%- include('partials/footer') %>
+
+  <canvas id="confetti"></canvas>
+
+  <%# data prepared by Express, read by the animation script %>
+  <script id="viz-data" type="application/json"><%- JSON.stringify({ array: result.array, key: key, steps: result.steps }).replace(/</g, '\\u003c') %></script>
+  <script src="/js/visualizer.js"></script>
+</body>
+</html>

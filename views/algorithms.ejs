@@ -1,0 +1,30 @@
+<%- include('partials/header') %>
+
+    <header class="hero">
+      <div class="logo">📚</div>
+      <div>
+        <h1>The <span>Algorithms</span></h1>
+        <p>How each searching algorithm works and how fast it is.</p>
+      </div>
+    </header>
+
+    <div class="info-grid">
+      <% Object.entries(algorithms).forEach(([id, a]) => { %>
+        <article class="panel info-card">
+          <div class="info-head">
+            <h2><%= a.name %></h2>
+            <% if (a.requiresSorted) { %><span class="tag-sorted static">needs sorted</span><% } else { %><span class="tag-ok">any array</span><% } %>
+          </div>
+          <p class="muted"><%= a.desc %></p>
+          <table class="cx">
+            <tr><th>Best</th><th>Average</th><th>Worst</th><th>Space</th></tr>
+            <tr><td><%= a.best %></td><td><%= a.avg %></td><td><%= a.worst %></td><td><%= a.space %></td></tr>
+          </table>
+          <a class="btn ghost small" href="/?algorithm=<%= id %>">Visualize <%= a.name.replace(' Search', '') %> →</a>
+        </article>
+      <% }) %>
+    </div>
+
+<%- include('partials/footer') %>
+</body>
+</html>
